@@ -1,7 +1,8 @@
 package me.zhukov.ivanbank.service;
 
 import me.zhukov.ivanbank.controller.dto.RegistrationRequest;
+import org.springframework.http.ResponseEntity;
 
 public interface UserService {
-    long registerUser(RegistrationRequest request);
+    ResponseEntity<String> registerUser(RegistrationRequest request);
 }

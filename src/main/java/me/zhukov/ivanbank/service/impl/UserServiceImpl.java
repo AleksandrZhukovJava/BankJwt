@@ -3,10 +3,11 @@ package me.zhukov.ivanbank.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.zhukov.ivanbank.controller.dto.RegistrationRequest;
-import me.zhukov.ivanbank.exception.PasswordConfirmationException;
 import me.zhukov.ivanbank.model.BankUser;
 import me.zhukov.ivanbank.repository.UserRepository;
 import me.zhukov.ivanbank.service.UserService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,13 +15,17 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    public long registerUser(RegistrationRequest request) {
-        if (!request.password().equals(request.confirmPassword())) {
-            throw new PasswordConfirmationException(request.password(), request.confirmPassword());
+    public ResponseEntity<String> registerUser(RegistrationRequest request) {
+        if (userRepository.findByUsername(request.login()).isPresent()) {
+            return ResponseEntity.badRequest().body("Username is already taken.");
         }
-        log.info("User with login {} was registered", request.login());
-        return userRepository.save(new BankUser(request.login(), request.password())).getId();
+
+        BankUser user = new BankUser(request.login(), passwordEncoder.encode(request.password()));
+        userRepository.save(user);
+
+        return ResponseEntity.ok("User registered successfully.");
     }
 }
