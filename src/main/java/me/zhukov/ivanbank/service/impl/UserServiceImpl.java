@@ -1,4 +1,4 @@
-package me.zhukov.ivanbank.service;
+package me.zhukov.ivanbank.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,6 +6,7 @@ import me.zhukov.ivanbank.controller.dto.RegistrationRequest;
 import me.zhukov.ivanbank.exception.PasswordConfirmationException;
 import me.zhukov.ivanbank.model.BankUser;
 import me.zhukov.ivanbank.repository.UserRepository;
+import me.zhukov.ivanbank.service.UserService;
 import org.springframework.stereotype.Service;
 
 @Service

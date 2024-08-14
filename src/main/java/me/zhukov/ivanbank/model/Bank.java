@@ -3,6 +3,7 @@ package me.zhukov.ivanbank.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,31 +20,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "bank_user")
+@Table(name = "bank")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Setter(value = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Data
 @Builder
-public class BankUser {
+public class Bank {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "username", unique = true, nullable = false)
-    private String username;
-    @Column(name = "password", nullable = false)
-    private String password;
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "name", unique = true, nullable = false)
+    private String name;
+
+    @OneToMany(mappedBy = "bank", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Account> accounts = new ArrayList<>();
 
     @Builder
-    public BankUser(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public void addAccount(Account account) {
-        accounts.add(account);
-        account.setOwner(this);
+    public Bank(String name) {
+        this.name = name;
     }
 }
